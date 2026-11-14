@@ -1,0 +1,90 @@
+
+/* =====================================
+   NEXUS TIMELINE CHAPTERS
+   PREMIUM BLACK + RED
+===================================== */
+
+.nexus-timeline-chapters {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+/* INDIVIDUAL CHAPTER */
+
+.nexus-timeline-chapter {
+  position: relative;
+  flex: 0 0 var(--media-slider-chapter-width);
+  height: 100%;
+  transition: background 180ms ease;
+}
+
+/* ACTIVE CHAPTER */
+
+.nexus-timeline-chapter[data-active] {
+  background: rgba(255, 55, 58, 0.14);
+}
+
+/* HIGHLIGHTED CHAPTER */
+
+.nexus-timeline-chapter[data-highlighted] {
+  background: rgba(255, 55, 58, 0.24);
+}
+
+/* TIMELINE PREVIEW TOOLTIP */
+
+.nexus-timeline-preview {
+  position: absolute;
+  bottom: 30px;
+  left: var(--media-slider-pointer);
+  z-index: 10;
+
+  display: grid;
+  gap: 5px;
+  padding: 11px 14px;
+
+  border: 1px solid rgba(255, 55, 58, 0.6);
+  border-radius: 10px;
+
+  background: rgba(17, 17, 17, 0.98);
+  color: #FFFFFF;
+
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+
+  transform: translateX(-50%);
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.6),
+    0 0 14px rgba(255, 55, 58, 0.12);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* PREVIEW CHAPTER TITLE */
+
+.nexus-preview-title {
+  color: #FF5558;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* SEEKING STATE */
+
+.nexus-timeline[data-seeking] {
+  opacity: 0.85;
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .nexus-timeline-chapter {
+    transition: none;
+  }
+}

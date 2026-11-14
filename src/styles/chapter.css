@@ -1,0 +1,164 @@
+
+/* =====================================
+   NEXUS — CHAPTER NAVIGATION
+   PREMIUM BLACK + RED
+===================================== */
+
+.nexus-chapter-panel {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 55, 58, 0.22);
+  border-radius: 12px;
+  background: rgba(17, 17, 17, 0.97);
+  color: #FFFFFF;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* =====================================
+   CHAPTER HEADING
+===================================== */
+
+.nexus-chapter-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #FF373A;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+/* =====================================
+   CHAPTER GRID
+===================================== */
+
+.nexus-chapter-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+/* =====================================
+   CHAPTER CARD
+===================================== */
+
+.nexus-chapter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  min-width: 0;
+  min-height: 76px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  background: #191919;
+  color: #FFFFFF;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+/* =====================================
+   HOVER + ACTIVE
+===================================== */
+
+.nexus-chapter:hover,
+.nexus-chapter.active {
+  border-color: rgba(255, 55, 58, 0.8);
+  background: rgba(255, 55, 58, 0.12);
+}
+
+.nexus-chapter:hover {
+  transform: translateY(-2px);
+}
+
+.nexus-chapter.active {
+  box-shadow:
+    inset 3px 0 0 #FF373A,
+    0 0 12px rgba(255, 55, 58, 0.08);
+}
+
+/* =====================================
+   CHAPTER NUMBER
+===================================== */
+
+.nexus-chapter-number {
+  color: #FF5558;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* =====================================
+   CHAPTER TITLE
+===================================== */
+
+.nexus-chapter-title {
+  overflow: hidden;
+  max-width: 100%;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =====================================
+   CHAPTER TIME
+===================================== */
+
+.nexus-chapter-time {
+  color: #A3A3A3;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =====================================
+   KEYBOARD ACCESSIBILITY
+===================================== */
+
+.nexus-chapter:focus-visible {
+  outline: 2px solid #FF5558;
+  outline-offset: 3px;
+}
+
+/* =====================================
+   MOBILE RESPONSIVE
+===================================== */
+
+@media (max-width: 650px) {
+  .nexus-chapter-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nexus-chapter-panel {
+    padding: 12px;
+  }
+
+  .nexus-chapter {
+    min-height: 72px;
+    padding: 11px;
+  }
+}
+
+/* =====================================
+   REDUCED MOTION
+===================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .nexus-chapter {
+    transition: none;
+  }
+
+  .nexus-chapter:hover {
+    transform: none;
+  }
+}
