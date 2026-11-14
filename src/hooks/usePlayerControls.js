@@ -40,10 +40,22 @@ export function usePlayerControls(usePlayer) {
       return store.setPlaybackRate(speed);
     },
 
-    toggleFullscreen() {
-      return state.isFullscreen
-        ? store.exitFullscreen()
-        : store.requestFullscreen();
+    async toggleFullscreen() {
+      if (state.isFullscreen) {
+        await store.exitFullscreen();
+        window.screen?.orientation?.unlock?.();
+        return;
+      }
+
+      await store.requestFullscreen();
+
+      if (window.matchMedia('(max-width: 900px)').matches) {
+        try {
+          await window.screen?.orientation?.lock?.('landscape');
+        } catch {
+          // Orientation locking is unavailable or denied on some browsers.
+        }
+      }
     },
   }), [store, state]);
 

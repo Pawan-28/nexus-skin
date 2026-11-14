@@ -286,8 +286,10 @@ video {
 
   .nexus-player:fullscreen {
     width: 100%;
-    height: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
     aspect-ratio: auto;
+    overflow: hidden;
     border-radius: 0;
   }
 
@@ -297,6 +299,18 @@ video {
     width: 100%;
     height: 100%;
     object-fit: contain;
+  }
+
+  .nexus-player:fullscreen .nexus-controls {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 55px 12px 12px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(5, 5, 5, 0.82) 35%,
+      rgba(5, 5, 5, 0.98)
+    );
   }
 
   /* PLAYER HEADER */
