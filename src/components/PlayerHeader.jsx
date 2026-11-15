@@ -5,32 +5,31 @@ function PlayerHeader({
   status = 'NOW PLAYING' 
 }) {
   return (
-    <header className="w-full flex items-start justify-between p-4 md:p-6 bg-gradient-to-b from-black/90 via-black/40 to-transparent">
+    // Header is now a flex column, aligned perfectly to the center
+    <header className="w-full flex flex-col items-center justify-center bg-gradient-to-b from-black/90 via-black/40 to-transparent pt-1 pb-4 sm:pb-6">
       
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-nexus-red to-nexus-darkRed text-white font-extrabold text-lg shadow-[0_0_15px_rgba(255,55,58,0.4)]">
+      {/* N Logo & Status */}
+      <div className="flex items-center gap-2 mb-1">
+        <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded-md sm:rounded-lg bg-nexus-red text-white font-extrabold text-xs sm:text-sm shadow-[0_0_15px_rgba(255,55,58,0.4)]">
           N
         </div>
-        <div>
-          <div className="flex items-center gap-2 text-nexus-lightRed text-[9px] font-extrabold tracking-[1.5px] uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-nexus-red shadow-[0_0_8px_rgba(255,55,58,0.8)] animate-pulse" />
-            {status}
-          </div>
-          <h3 className="text-white text-sm md:text-lg font-bold mt-0.5 tracking-tight drop-shadow-md">
-            {title}
-          </h3>
-          <p className="text-gray-300 text-[10px] md:text-xs hidden sm:block drop-shadow-sm mt-0.5">
-            {subtitle}
-          </p>
+        <div className="flex items-center gap-1.5 text-nexus-lightRed text-[8px] sm:text-[9px] font-extrabold tracking-[1px]">
+          <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-nexus-red animate-pulse" />
+          {status}
         </div>
       </div>
 
-      <div className="px-3 py-1.5 bg-black/60 border border-nexus-red/50 rounded-md text-nexus-lightRed text-[10px] font-extrabold tracking-wide backdrop-blur-md shadow-lg">
-        {quality}
-      </div>
+      {/* Centered Title */}
+      <h3 className="text-white text-[11px] sm:text-base font-bold tracking-tight drop-shadow-md text-center px-4">
+        {title}
+      </h3>
 
+      {/* Subtitle (Hidden on Mobile) */}
+      <p className="text-gray-300 text-[9px] sm:text-xs hidden sm:block mt-0.5 drop-shadow-sm">
+        {subtitle}
+      </p>
+      
     </header>
   );
 }
-
 export default PlayerHeader;

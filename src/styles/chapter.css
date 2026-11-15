@@ -4,7 +4,7 @@
    PREMIUM BLACK + RED
 ===================================== */
 
-.nexus-chapter-panel {
+/* .nexus-chapter-panel {
   position: relative;
   z-index: 5;
   width: 100%;
@@ -15,7 +15,7 @@
   background: rgba(17, 17, 17, 0.97);
   color: #FFFFFF;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
+} */
 
 /* =====================================
    CHAPTER HEADING
@@ -36,7 +36,7 @@
    CHAPTER GRID
 ===================================== */
 
-.nexus-chapter-list {
+/* .nexus-chapter-list {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
@@ -126,7 +126,7 @@
 ===================================== */
 
 .nexus-chapter:focus-visible {
-  outline: 2px solid #FF5558;
+  outline: 2px solid #FF5558; */
   outline-offset: 3px;
 }
 

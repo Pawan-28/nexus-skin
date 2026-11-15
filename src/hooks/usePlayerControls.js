@@ -12,15 +12,12 @@ export function usePlayerControls(usePlayer) {
   const playbackRate = usePlayer((s) => s.playbackRate);
   const playbackRateAvailability = usePlayer((s) => s.playbackRateAvailability);
   
-  // Video.js v10 Mux Renditions
   const videoRenditionList = usePlayer((s) => s.videoRenditionList || []);
   const activeVideoRendition = usePlayer((s) => s.activeVideoRendition);
   const selectVideoRendition = usePlayer((s) => s.selectVideoRendition);
 
-  // Local state for instant UI feedback
   const [localQuality, setLocalQuality] = useState(null);
 
-  // Sync local state with actual player state when it catches up
   useEffect(() => {
     if (activeVideoRendition?.height) {
       setLocalQuality(activeVideoRendition.height);
@@ -34,12 +31,11 @@ export function usePlayerControls(usePlayer) {
       .sort((a, b) => b.height - a.height);
   }, [videoRenditionList]);
 
-  // Instant UI highlight
   const setQuality = useCallback((height) => {
-    setLocalQuality(height); // Update UI immediately
+    setLocalQuality(height);
     const rendition = videoRenditionList.find((r) => r.height === height);
     if (rendition && selectVideoRendition) {
-      selectVideoRendition(rendition.id); // Tell player to load
+      selectVideoRendition(rendition.id);
     }
   }, [videoRenditionList, selectVideoRendition]);
 
@@ -78,7 +74,7 @@ export function usePlayerControls(usePlayer) {
       paused, muted, volume, currentTime, duration, 
       isFullscreen, playbackRate, playbackRateAvailability, 
       qualities, 
-      activeQuality: localQuality // Use local state for UI
+      activeQuality: localQuality
     },
     actions: { togglePlay, toggleMute, setVolume, seek, setSpeed, toggleFullscreen, setQuality }
   };

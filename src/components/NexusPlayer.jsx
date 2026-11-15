@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import {
   createPlayer, Container, Controls, Hotkey, 
   StatusAnnouncer
@@ -10,17 +10,18 @@ import PlayerControls from './PlayerControls';
 import PlayerHeader from './PlayerHeader';
 import ChapterPanel from './ChapterPanel';
 
-const PLAYBACK_ID = 'YZJkPyAC01idtK5HuPp02sXMGWERdZ8q2Ii5ELXQMcQYA';
+const VIDEOS = [
+  { id: 'YZJkPyAC01idtK5HuPp02sXMGWERdZ8q2Ii5ELXQMcQYA', title: 'NEXUS PROOF PLAYER - Cinematic' },
+  { id: 'UhHqlIT8pmJD6RTrES3VzzcVTuPJmoj02WuiN4cjSHm8', title: 'NEXUS PROOF PLAYER - Abstract' },
+  { id: 'MK3ZtvMhy3R3xSG15BbK4W01BfzRjD01f01kAdnpQv4jIk', title: 'NEXUS PROOF PLAYER - Nature' }
+];
 
 const { Player, usePlayer } = createPlayer({ features: videoFeatures });
 
-function NexusSkin({ children, title }) {
+function NexusSkin({ children, title, onVideoChange, currentVideoIndex }) {
   const store = usePlayer();
   const currentTime = usePlayer((s) => s.currentTime);
-  const duration = usePlayer((s) => s.duration);
-  
   const [chapters, setChapters] = useState([]);
-  const progressBarRef = useRef(null);
 
   useEffect(() => {
     const track = document.querySelector('track[kind="chapters"]');
@@ -32,69 +33,52 @@ function NexusSkin({ children, title }) {
         text: cue.text,
       })));
     }
-  }, []);
-
-  const handleSeek = (e) => {
-    if (!progressBarRef.current || !duration) return;
-    const rect = progressBarRef.current.getBoundingClientRect();
-    const pos = (e.clientX - rect.left) / rect.width;
-    const seekTime = Math.max(0, Math.min(1, pos)) * duration;
-    store.seek(seekTime);
-  };
-
-  const progressPercent = duration ? (currentTime / duration) * 100 : 0;
+  }, [currentVideoIndex]);
 
   return (
-    <div className="relative w-full max-w-[1150px] mx-auto group bg-black rounded-2xl overflow-hidden border border-nexus-red/30 shadow-[0_30px_100px_rgba(0,0,0,0.9),0_0_40px_rgba(255,55,58,0.1)]">
+    <div className="relative w-full max-w-[1150px] mx-auto group bg-black rounded-2xl overflow-hidden border border-nexus-red/30 shadow-2xl">
       
-      <Container className="relative w-full aspect-video flex flex-col justify-end" aria-label={title}>
+      <Container className="relative w-full aspect-video max-h-[650px] overflow-hidden" aria-label={title}>
         
         <div className="absolute inset-0 w-full h-full z-0 bg-black">
           {children}
         </div>
 
-        <div className="absolute top-0 left-0 right-0 z-30 pointer-events-none">
-          <PlayerHeader title={title} />
+        {/* 🚀 TOP BAR (Title Center, Next Button Top-Right) 🚀 */}
+        <div className="absolute top-0 left-0 right-0 z-30 p-2 sm:p-4 pointer-events-none flex justify-between items-start">
+          
+          {/* Title (Center) */}
+          <div className="w-full absolute top-0 left-0 flex justify-center pt-2 sm:pt-4 pointer-events-none">
+             <PlayerHeader title={title} />
+          </div>
+          
+          {/* Next Video Button - Absolute Top Right */}
+          <button 
+            onClick={onVideoChange}
+            className="absolute top-2 right-2 sm:top-4 sm:right-4 pointer-events-auto flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-black/60 border border-white/20 rounded-full text-white text-[9px] sm:text-[10px] font-bold backdrop-blur-md hover:bg-nexus-red/30 hover:border-nexus-red/50 transition-all shadow-md z-50"
+          >
+            <span>NEXT VIDEO</span>
+            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
         </div>
 
-        <Controls.Root className="absolute inset-0 z-20 flex flex-col justify-end bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent pointer-events-none">
+        {/* 🚀 BOTTOM CONTROLS (Minimal Margin) 🚀 */}
+        <Controls.Root className="absolute inset-0 z-20 flex flex-col justify-end bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent pointer-events-none">
           
-          {/* Glassmorphism Bottom Control Bar */}
-          <Controls.Content className="w-full px-3 sm:px-6 pb-4 sm:pb-6 pt-32 flex flex-col gap-3 pointer-events-auto">
+          <Controls.Content className="absolute bottom-0 left-0 right-0 w-full px-2 sm:px-6 pb-2 sm:pb-4 flex flex-col pointer-events-auto">
             
-            {/* 🚀 PREMIUM THICK TIMELINE 🚀 */}
-            <div 
-              className="relative w-full py-3 cursor-pointer group/timeline z-40 touch-none"
-              onPointerDown={handleSeek}
-              onPointerMove={(e) => { if (e.buttons === 1) handleSeek(e); }}
-            >
-              <div 
-                ref={progressBarRef} 
-                className="relative w-full h-2.5 sm:h-3 bg-white/10 backdrop-blur-md rounded-full border border-white/5 shadow-inner overflow-hidden group-hover/timeline:h-3.5 transition-all duration-200"
-              >
-                {/* Red Gradient Fill */}
-                <div 
-                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#FF373A] via-[#FF5558] to-[#C72930] rounded-full shadow-[0_0_15px_rgba(255,55,58,0.8)]"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-              
-              {/* Thumb (Red Dot) */}
-              <div 
-                className="absolute top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 bg-white border-[3px] border-nexus-red rounded-full shadow-[0_0_15px_rgba(255,55,58,0.9)] transition-transform group-hover/timeline:scale-110 z-50 pointer-events-none"
-                style={{ left: `calc(${progressPercent}% - 10px)` }}
-              />
-            </div>
-
-            <PlayerControls usePlayer={usePlayer} />
-            
-            <div className="hidden sm:block">
+            <div className="hidden sm:block absolute bottom-[80px] left-0 w-full px-3 sm:px-6">
               <ChapterPanel
                 currentTime={currentTime}
                 chapters={chapters}
                 onSelect={(seconds) => store.seek(seconds)}
               />
             </div>
+
+            <div className="w-full bg-nexus-red/10 backdrop-blur-2xl border border-nexus-red/20 rounded-full shadow-[0_8px_32px_rgba(255,55,58,0.15)] flex flex-col">
+              <PlayerControls usePlayer={usePlayer} />
+            </div>
+            
           </Controls.Content>
         </Controls.Root>
 
@@ -106,14 +90,25 @@ function NexusSkin({ children, title }) {
   );
 }
 
-function NexusPlayer({ title = 'NEXUS PROOF PLAYER - Cinematic' }) {
+function NexusPlayer() {
+  const [videoIndex, setVideoIndex] = useState(0);
+  const currentVideo = VIDEOS[videoIndex];
+
+  const handleNextVideo = () => {
+    setVideoIndex((prev) => (prev + 1) % VIDEOS.length);
+  };
+
   return (
     <div className="w-full flex justify-center py-6 sm:py-10 px-2 sm:px-0">
-      <Player>
-        <NexusSkin title={title}>
+      <Player key={currentVideo.id}>
+        <NexusSkin 
+          title={currentVideo.title} 
+          onVideoChange={handleNextVideo}
+          currentVideoIndex={videoIndex}
+        >
           <MuxVideo
             source={{
-              playbackId: PLAYBACK_ID,
+              playbackId: currentVideo.id,
               poster: { time: 2, width: 1280 },
               storyboard: { format: 'webp' },
               playback: { maxResolution: '1080p' }, 
@@ -121,7 +116,7 @@ function NexusPlayer({ title = 'NEXUS PROOF PLAYER - Cinematic' }) {
             playsInline
             crossOrigin="anonymous"
             preload="metadata"
-            className="w-full h-full object-contain"
+            className="w-full h-full object-cover"
           >
             <track kind="chapters" src="/chapters.vtt" srcLang="en" label="Video Chapters" default />
           </MuxVideo>
