@@ -39,10 +39,9 @@ function PlayerControls({ usePlayer }) {
   return (
     <div ref={settingsRef} className="relative w-full flex flex-col gap-1.5 px-3 sm:px-5 py-2 pointer-events-auto min-h-[56px] justify-center">
       
-      {/* Buttons Row */}
+      {/* Main Row */}
       <div className="w-full flex items-center justify-between z-50 h-8 sm:h-10">
         
-        {/* Left Side */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 h-full">
           <button
             onClick={actions.togglePlay}
@@ -76,7 +75,6 @@ function PlayerControls({ usePlayer }) {
           </button>
         </div>
 
-        {/* Right Side */}
         <div className="flex items-center gap-1 sm:gap-2 shrink-0 z-50 pointer-events-auto h-full">
           <VolumeControl
             volume={state.volume}
@@ -90,7 +88,7 @@ function PlayerControls({ usePlayer }) {
               e.stopPropagation();
               setSettingsOpen(!settingsOpen);
             }}
-            className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-all shrink-0 cursor-pointer z-50 ${
+            className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-all shrink-0 cursor-pointer z-[60] ${
               settingsOpen ? 'text-nexus-red bg-white/10' : 'text-white/80 hover:text-white'
             }`}
           >
@@ -113,40 +111,27 @@ function PlayerControls({ usePlayer }) {
         </div>
       </div>
 
-      {/* Timeline */}
       <div 
         className="relative w-full h-2 flex items-center cursor-pointer group/timeline touch-none mt-1 z-50"
         onPointerDown={handleSeek}
         onPointerMove={(e) => { if (e.buttons === 1) handleSeek(e); }}
       >
-        <div 
-          ref={progressBarRef} 
-          className="relative w-full h-[3px] bg-white/20 rounded-full overflow-hidden group-hover/timeline:h-1 transition-all duration-200"
-        >
-          <div 
-            className="absolute top-0 left-0 h-full bg-nexus-red rounded-full"
-            style={{ width: `${progressPercent}%` }}
-          />
+        <div ref={progressBarRef} className="relative w-full h-[3px] bg-white/20 rounded-full overflow-hidden group-hover/timeline:h-1 transition-all duration-200">
+          <div className="absolute top-0 left-0 h-full bg-nexus-red rounded-full" style={{ width: `${progressPercent}%` }} />
         </div>
-        
-        <div 
-          className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-sm transition-transform group-hover/timeline:scale-125 z-50 pointer-events-none"
-          style={{ left: `calc(${progressPercent}% - 4px)` }}
-        />
+        <div className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-sm transition-transform group-hover/timeline:scale-125 z-50 pointer-events-none" style={{ left: `calc(${progressPercent}% - 4px)` }} />
       </div>
 
       {settingsOpen && (
-        <div className="absolute inset-0 top-0 left-0 w-full h-full pointer-events-none flex items-end justify-end pb-12 pr-2 z-50">
-           <SettingsPanel
-              currentSpeed={state.playbackRate}
-              onSpeedChange={actions.setSpeed}
-              qualities={state.qualities}
-              activeQuality={state.activeQuality}
-              onQualityChange={actions.setQuality}
-              onClose={() => setSettingsOpen(false)}
-              disabled={state.playbackRateAvailability !== 'available'}
-            />
-        </div>
+        <SettingsPanel
+          currentSpeed={state.playbackRate}
+          onSpeedChange={actions.setSpeed}
+          qualities={state.qualities}
+          activeQuality={state.activeQuality}
+          onQualityChange={actions.setQuality}
+          onClose={() => setSettingsOpen(false)}
+          disabled={state.playbackRateAvailability !== 'available'}
+        />
       )}
     </div>
   );

@@ -4,6 +4,12 @@ function VolumeControl({ volume = 1, muted = false, onVolumeChange, onToggleMute
   const currentVolume = muted ? 0 : volume;
   const [isHovered, setIsHovered] = useState(false);
 
+  // Toggle slider on tap/click
+  const handleToggleSlider = (e) => {
+    e.stopPropagation();
+    setIsHovered(!isHovered);
+  };
+
   return (
     <div 
       className="relative flex items-center justify-center py-2 z-50 pointer-events-auto"
@@ -12,8 +18,8 @@ function VolumeControl({ volume = 1, muted = false, onVolumeChange, onToggleMute
     >
       {/* Vertical Slider Popup */}
       <div 
-        className={`hidden sm:flex absolute bottom-full mb-1 flex-col items-center justify-center bg-[#1A1A1A]/90 backdrop-blur-xl border border-white/10 rounded-full py-3 px-1.5 transition-all duration-300 origin-bottom ${
-          isHovered ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2 pointer-events-none'
+        className={`absolute bottom-full mb-2 flex flex-col items-center justify-center bg-[#1A1A1A]/90 backdrop-blur-xl border border-white/10 rounded-full py-3 px-1.5 transition-all duration-300 origin-bottom ${
+          isHovered ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-95 translate-y-2 pointer-events-none'
         }`}
         style={{ height: '110px' }}
       >
@@ -33,7 +39,7 @@ function VolumeControl({ volume = 1, muted = false, onVolumeChange, onToggleMute
       </div>
 
       <button 
-        onClick={onToggleMute} 
+        onClick={handleToggleSlider}
         className="text-white/80 hover:text-nexus-red transition-colors p-1 cursor-pointer z-50"
         aria-label={muted ? 'Unmute' : 'Mute'}
       >
