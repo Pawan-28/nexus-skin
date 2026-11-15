@@ -37,11 +37,13 @@ function PlayerControls({ usePlayer }) {
   const progressPercent = state.duration ? (state.currentTime / state.duration) * 100 : 0;
 
   return (
-    <div ref={settingsRef} className="relative w-full flex flex-col pt-1.5 pb-2 px-3 sm:px-5 gap-1 pointer-events-auto min-h-[56px] justify-center">
+    <div ref={settingsRef} className="relative w-full flex flex-col gap-1.5 px-3 sm:px-5 py-2 pointer-events-auto min-h-[56px] justify-center">
       
-      <div className="w-full flex items-center justify-between z-50">
+      {/* Buttons Row */}
+      <div className="w-full flex items-center justify-between z-50 h-8 sm:h-10">
         
-        <div className="flex items-center gap-1.5 sm:gap-2.5">
+        {/* Left Side */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 h-full">
           <button
             onClick={actions.togglePlay}
             className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-nexus-red text-white hover:scale-105 transition-all shadow-md shrink-0 cursor-pointer z-50"
@@ -74,7 +76,8 @@ function PlayerControls({ usePlayer }) {
           </button>
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0 z-50 pointer-events-auto">
+        {/* Right Side */}
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0 z-50 pointer-events-auto h-full">
           <VolumeControl
             volume={state.volume}
             muted={state.muted}
@@ -110,7 +113,7 @@ function PlayerControls({ usePlayer }) {
         </div>
       </div>
 
-      {/* Timeline Line */}
+      {/* Timeline */}
       <div 
         className="relative w-full h-2 flex items-center cursor-pointer group/timeline touch-none mt-1 z-50"
         onPointerDown={handleSeek}

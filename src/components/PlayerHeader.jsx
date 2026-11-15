@@ -5,8 +5,7 @@ function PlayerHeader({
   status = 'NOW PLAYING' 
 }) {
   return (
-    // Header is now a flex column, aligned perfectly to the center
-    <header className="w-full flex flex-col items-center justify-center bg-gradient-to-b from-black/90 via-black/40 to-transparent pt-1 pb-4 sm:pb-6">
+    <header className="w-full flex flex-col items-center justify-center pt-1 pb-2 sm:pt-2 sm:pb-3 bg-gradient-to-b from-black/90 via-black/40 to-transparent">
       
       {/* N Logo & Status */}
       <div className="flex items-center gap-2 mb-1">

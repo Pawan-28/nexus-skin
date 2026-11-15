@@ -21,7 +21,11 @@ const { Player, usePlayer } = createPlayer({ features: videoFeatures });
 function NexusSkin({ children, title, onVideoChange, currentVideoIndex }) {
   const store = usePlayer();
   const currentTime = usePlayer((s) => s.currentTime);
+  const isPaused = usePlayer((s) => s.paused);
   const [chapters, setChapters] = useState([]);
+  
+  // State to manage visibility of controls
+  const [controlsVisible, setControlsVisible] = useState(true);
 
   useEffect(() => {
     const track = document.querySelector('track[kind="chapters"]');
@@ -35,8 +39,53 @@ function NexusSkin({ children, title, onVideoChange, currentVideoIndex }) {
     }
   }, [currentVideoIndex]);
 
+  // Auto-hide logic
+  useEffect(() => {
+    let timeoutId;
+
+    const handleMouseMove = () => {
+      setControlsVisible(true); // Show on move
+      clearTimeout(timeoutId);
+
+      // If video is playing, hide after 3 seconds of inactivity
+      if (!isPaused) {
+        timeoutId = setTimeout(() => {
+          setControlsVisible(false);
+        }, 3000);
+      }
+    };
+
+    const handleMouseLeave = () => {
+      if (!isPaused) setControlsVisible(false);
+    };
+
+    // Initial timer on load if playing
+    if (!isPaused) {
+        timeoutId = setTimeout(() => {
+          setControlsVisible(false);
+        }, 3000);
+    } else {
+        setControlsVisible(true); // Always show when paused
+    }
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchstart', handleMouseMove);
+    window.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchstart', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeave);
+      clearTimeout(timeoutId);
+    };
+  }, [isPaused]);
+
   return (
-    <div className="relative w-full max-w-[1150px] mx-auto group bg-black rounded-2xl overflow-hidden border border-nexus-red/30 shadow-2xl">
+    <div 
+      className="relative w-full max-w-[1150px] mx-auto group bg-black rounded-2xl overflow-hidden border border-nexus-red/30 shadow-2xl"
+      onMouseMove={() => setControlsVisible(true)} // Show controls on hover
+      onMouseLeave={() => !isPaused && setControlsVisible(false)} // Hide on leave if playing
+    >
       
       <Container className="relative w-full aspect-video max-h-[650px] overflow-hidden" aria-label={title}>
         
@@ -44,28 +93,32 @@ function NexusSkin({ children, title, onVideoChange, currentVideoIndex }) {
           {children}
         </div>
 
-        {/* 🚀 TOP BAR (Title Center, Next Button Top-Right) 🚀 */}
-        <div className="absolute top-0 left-0 right-0 z-30 p-2 sm:p-4 pointer-events-none flex justify-between items-start">
+        {/* 🚀 TOP BAR 🚀 */}
+        <div 
+          className={`absolute top-0 left-0 right-0 z-30 p-2 sm:p-4 pointer-events-none flex justify-between items-start transition-opacity duration-300 ${controlsVisible ? 'opacity-100' : 'opacity-0'}`}
+        >
           
           {/* Title (Center) */}
           <div className="w-full absolute top-0 left-0 flex justify-center pt-2 sm:pt-4 pointer-events-none">
              <PlayerHeader title={title} />
           </div>
           
-          {/* Next Video Button - Absolute Top Right */}
+          {/* Next Video Button */}
           <button 
             onClick={onVideoChange}
-            className="absolute top-2 right-2 sm:top-4 sm:right-4 pointer-events-auto flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-black/60 border border-white/20 rounded-full text-white text-[9px] sm:text-[10px] font-bold backdrop-blur-md hover:bg-nexus-red/30 hover:border-nexus-red/50 transition-all shadow-md z-50"
+            className="absolute top-2 right-2 sm:top-4 sm:right-4 pointer-events-auto flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-nexus-red/20 border border-nexus-red/40 rounded-full text-white text-[9px] sm:text-[10px] font-bold backdrop-blur-md hover:bg-nexus-red/40 hover:border-nexus-red/60 transition-all shadow-md z-50"
           >
             <span>NEXT VIDEO</span>
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </div>
 
-        {/* 🚀 BOTTOM CONTROLS (Minimal Margin) 🚀 */}
+        {/* 🚀 BOTTOM CONTROLS 🚀 */}
         <Controls.Root className="absolute inset-0 z-20 flex flex-col justify-end bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent pointer-events-none">
           
-          <Controls.Content className="absolute bottom-0 left-0 right-0 w-full px-2 sm:px-6 pb-2 sm:pb-4 flex flex-col pointer-events-auto">
+          <Controls.Content 
+            className={`absolute bottom-0 left-0 right-0 w-full px-2 sm:px-6 pb-2 sm:pb-4 flex flex-col pointer-events-auto transition-opacity duration-300 ${controlsVisible ? 'opacity-100' : 'opacity-0'}`}
+          >
             
             <div className="hidden sm:block absolute bottom-[80px] left-0 w-full px-3 sm:px-6">
               <ChapterPanel
