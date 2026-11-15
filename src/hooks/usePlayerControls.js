@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 
 export function usePlayerControls(usePlayer) {
   const store = usePlayer();
@@ -12,9 +12,36 @@ export function usePlayerControls(usePlayer) {
   const playbackRate = usePlayer((s) => s.playbackRate);
   const playbackRateAvailability = usePlayer((s) => s.playbackRateAvailability);
   
-  // NAYA: Quality state
-  const qualities = usePlayer((s) => s.qualities || []);
-  const activeQuality = usePlayer((s) => s.activeQuality);
+  // Video.js v10 Mux Renditions
+  const videoRenditionList = usePlayer((s) => s.videoRenditionList || []);
+  const activeVideoRendition = usePlayer((s) => s.activeVideoRendition);
+  const selectVideoRendition = usePlayer((s) => s.selectVideoRendition);
+
+  // Local state for instant UI feedback
+  const [localQuality, setLocalQuality] = useState(null);
+
+  // Sync local state with actual player state when it catches up
+  useEffect(() => {
+    if (activeVideoRendition?.height) {
+      setLocalQuality(activeVideoRendition.height);
+    }
+  }, [activeVideoRendition]);
+
+  const qualities = useMemo(() => {
+    return videoRenditionList
+      .filter((r) => r.height)
+      .map((r) => ({ height: r.height, id: r.id }))
+      .sort((a, b) => b.height - a.height);
+  }, [videoRenditionList]);
+
+  // Instant UI highlight
+  const setQuality = useCallback((height) => {
+    setLocalQuality(height); // Update UI immediately
+    const rendition = videoRenditionList.find((r) => r.height === height);
+    if (rendition && selectVideoRendition) {
+      selectVideoRendition(rendition.id); // Tell player to load
+    }
+  }, [videoRenditionList, selectVideoRendition]);
 
   const togglePlay = useCallback(() => {
     paused ? store.play() : store.pause();
@@ -30,20 +57,8 @@ export function usePlayerControls(usePlayer) {
     if (vol > 0 && muted) store.setMuted(false);
   }, [store, muted]);
 
-  const seek = useCallback((seconds) => {
-    store.seek(seconds);
-  }, [store]);
-
-  const setSpeed = useCallback((speed) => {
-    store.setPlaybackRate(speed);
-  }, [store]);
-
-  // NAYA: Quality change function
-  const setQuality = useCallback((height) => {
-    if (store.setQuality) {
-      store.setQuality(height);
-    }
-  }, [store]);
+  const seek = useCallback((seconds) => store.seek(seconds), [store]);
+  const setSpeed = useCallback((speed) => store.setPlaybackRate(speed), [store]);
 
   const toggleFullscreen = useCallback(async () => {
     if (isFullscreen) {
@@ -59,14 +74,12 @@ export function usePlayerControls(usePlayer) {
 
   return {
     store,
-    state: {
-      paused, muted, volume, currentTime, duration,
-      isFullscreen, playbackRate, playbackRateAvailability,
-      qualities, activeQuality // Pass quality state
+    state: { 
+      paused, muted, volume, currentTime, duration, 
+      isFullscreen, playbackRate, playbackRateAvailability, 
+      qualities, 
+      activeQuality: localQuality // Use local state for UI
     },
-    actions: { 
-      togglePlay, toggleMute, setVolume, seek, setSpeed, 
-      toggleFullscreen, setQuality // Pass action
-    }
+    actions: { togglePlay, toggleMute, setVolume, seek, setSpeed, toggleFullscreen, setQuality }
   };
 }

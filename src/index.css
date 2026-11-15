@@ -1,16 +1,62 @@
 @import "tailwindcss";
 
-* {
-  box-sizing: border-box;
+@theme {
+  --color-nexus-red: #FF373A;
+  --color-nexus-darkRed: #C72930;
+  --color-nexus-lightRed: #FF5558;
+  --color-nexus-bg: #050505;
 }
 
 body {
+  background-color: var(--color-nexus-bg);
+  color: white;
+  font-family: 'Inter', sans-serif;
   margin: 0;
-  background: #080914;
-  font-family: Inter, sans-serif;
 }
 
+/* Hide Default Video.js UI */
+.video-js .vjs-control-bar,
+.video-js .vjs-big-play-button,
+.video-js .vjs-loading-spinner,
+.video-js .vjs-text-track-display,
+.vjs-volume-panel,
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+/* Force video to fit inside our container */
+.video-js, video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+/* 🚨 TIMELINE FIXES 🚨 */
+/* Sync Video.js variables with our Tailwind fill */
+[data-media-slider-fill] {
+  width: var(--media-slider-fill, 0%) !important;
+}
+[data-media-slider-buffer] {
+  width: var(--media-slider-buffer, 0%) !important;
+}
+[data-media-slider-pointer] {
+  left: var(--media-slider-pointer, 0%) !important;
+}
+
+/* Hide Tooltip when not hovering */
+[data-media-slider-preview] {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+.nexus-timeline:hover [data-media-slider-preview],
+[data-media-slider-preview][data-visible] {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Remove Text Selection blue highlight */
 ::selection {
-  background: #8b5cf6;
+  background: var(--color-nexus-red);
   color: white;
 }
