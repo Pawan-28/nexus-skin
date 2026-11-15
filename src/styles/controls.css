@@ -542,3 +542,121 @@
     flex-basis: 105px;
   }
 }
+
+
+/* Wrapper to hold everything */
+.nexus-controls-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Main Control Row */
+.nexus-control-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Push right-side icons to the end */
+.nexus-control-spacer {
+  flex-grow: 1;
+}
+
+/* Skip Buttons (10s) */
+.nexus-skip-btn {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  padding: 0 !important;
+  color: #ccc !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.nexus-skip-btn:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: scale(1.1) !important;
+}
+
+.nexus-skip-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Time Display */
+.nexus-time-display {
+  font-size: 12px;
+  color: #aaa;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.nexus-time-display span:first-child {
+  color: #fff;
+  font-weight: 600;
+}
+
+.nexus-time-total {
+  display: none; /* Hide total time on mobile to save space */
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 600px) {
+  .nexus-controls {
+    padding: 30px 12px 12px;
+  }
+
+  .nexus-control-group {
+    gap: 6px; /* Tighter gap on mobile */
+  }
+
+  /* Hide volume slider on mobile */
+  .nexus-volume-desktop {
+    display: none;
+  }
+
+  /* Adjust Play button size slightly */
+  .nexus-play-button {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+  }
+
+  /* Make sure icons fit */
+  .nexus-skip-btn {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+  }
+
+  .nexus-skip-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Gear & Fullscreen icons */
+  .nexus-settings-button, 
+  .nexus-control-group > button:last-child {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    padding: 0 !important;
+  }
+
+  .nexus-settings-button svg,
+  .nexus-control-group > button:last-child svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .nexus-time-display {
+    font-size: 11px;
+    margin-right: auto; /* Pushes remaining icons to right */
+  }
+}
