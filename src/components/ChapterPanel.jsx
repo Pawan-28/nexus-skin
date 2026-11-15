@@ -1,17 +1,20 @@
-
 import '../styles/chapter.css';
 
-const chapters = [
-  { id: 1, title: 'Introduction', time: '00:00', seconds: 0 },
-  { id: 2, title: 'City Lights', time: '00:25', seconds: 25 },
-  { id: 3, title: 'The Red Bridge', time: '00:50', seconds: 50 },
-  { id: 4, title: 'Final Moments', time: '01:15', seconds: 75 },
-];
+// Helper function seconds ko "MM:SS" mein badalne ke liye
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds)) return '00:00';
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
 
-function ChapterPanel({ onSelect, currentTime = 0 }) {
+function ChapterPanel({ onSelect, currentTime = 0, chapters = [] }) {
+  // Agar VTT load nahi hui toh fallback
+  if (!chapters || chapters.length === 0) return null;
+
   const activeChapter = chapters.reduce((active, chapter) => {
-    return currentTime >= chapter.seconds ? chapter.id : active;
-  }, chapters[0].id);
+    return currentTime >= chapter.startTime ? chapter : active;
+  }, chapters[0]);
 
   return (
     <section className="nexus-chapter-panel">
@@ -21,33 +24,29 @@ function ChapterPanel({ onSelect, currentTime = 0 }) {
       </div>
 
       <div className="nexus-chapter-list">
-        {chapters.map((chapter) => (
-          <button
-            key={chapter.id}
-            type="button"
-            className={
-              activeChapter === chapter.id
-                ? 'nexus-chapter active'
-                : 'nexus-chapter'
-            }
-            onClick={() => onSelect?.(chapter.seconds)}
-            aria-current={
-              activeChapter === chapter.id ? 'true' : undefined
-            }
-          >
-            <span className="nexus-chapter-number">
-              {String(chapter.id).padStart(2, '0')}
-            </span>
-
-            <span className="nexus-chapter-title">
-              {chapter.title}
-            </span>
-
-            <span className="nexus-chapter-time">
-              {chapter.time}
-            </span>
-          </button>
-        ))}
+        {chapters.map((chapter, index) => {
+          const isActive = activeChapter?.startTime === chapter.startTime;
+          
+          return (
+            <button
+              key={index}
+              type="button"
+              className={`nexus-chapter ${isActive ? 'active' : ''}`}
+              onClick={() => onSelect?.(chapter.startTime)}
+              aria-current={isActive ? 'true' : undefined}
+            >
+              <span className="nexus-chapter-number">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span className="nexus-chapter-title">
+                {chapter.text || `Chapter ${index + 1}`}
+              </span>
+              <span className="nexus-chapter-time">
+                {formatTime(chapter.startTime)}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </section>
   );

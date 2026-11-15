@@ -1,63 +1,72 @@
-
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 
 export function usePlayerControls(usePlayer) {
   const store = usePlayer();
 
-  const state = usePlayer((s) => ({
-    paused: s.paused,
-    muted: s.muted,
-    volume: s.volume,
-    currentTime: s.currentTime,
-    duration: s.duration,
-    isFullscreen: s.isFullscreen,
-    playbackRate: s.playbackRate,
-    playbackRateAvailability: s.playbackRateAvailability,
-  }));
+  const paused = usePlayer((s) => s.paused);
+  const muted = usePlayer((s) => s.muted);
+  const volume = usePlayer((s) => s.volume);
+  const currentTime = usePlayer((s) => s.currentTime);
+  const duration = usePlayer((s) => s.duration);
+  const isFullscreen = usePlayer((s) => s.isFullscreen);
+  const playbackRate = usePlayer((s) => s.playbackRate);
+  const playbackRateAvailability = usePlayer((s) => s.playbackRateAvailability);
+  
+  // NAYA: Quality state
+  const qualities = usePlayer((s) => s.qualities || []);
+  const activeQuality = usePlayer((s) => s.activeQuality);
 
-  const actions = useMemo(() => ({
-    togglePlay() {
-      return state.paused ? store.play() : store.pause();
-    },
+  const togglePlay = useCallback(() => {
+    paused ? store.play() : store.pause();
+  }, [paused, store]);
 
-    toggleMute() {
-      return store.setMuted(!state.muted);
-    },
+  const toggleMute = useCallback(() => {
+    store.setMuted(!muted);
+  }, [muted, store]);
 
-    setVolume(value) {
-      const volume = Math.max(0, Math.min(1, Number(value)));
-      store.setVolume(volume);
-      if (volume > 0 && state.muted) {
-        store.setMuted(false);
-      }
-    },
+  const setVolume = useCallback((val) => {
+    const vol = Math.max(0, Math.min(1, Number(val)));
+    store.setVolume(vol);
+    if (vol > 0 && muted) store.setMuted(false);
+  }, [store, muted]);
 
-    seek(seconds) {
-      return store.seek(seconds);
-    },
+  const seek = useCallback((seconds) => {
+    store.seek(seconds);
+  }, [store]);
 
-    setSpeed(speed) {
-      return store.setPlaybackRate(speed);
-    },
+  const setSpeed = useCallback((speed) => {
+    store.setPlaybackRate(speed);
+  }, [store]);
 
-    async toggleFullscreen() {
-      if (state.isFullscreen) {
-        await store.exitFullscreen();
-        window.screen?.orientation?.unlock?.();
-        return;
-      }
+  // NAYA: Quality change function
+  const setQuality = useCallback((height) => {
+    if (store.setQuality) {
+      store.setQuality(height);
+    }
+  }, [store]);
 
+  const toggleFullscreen = useCallback(async () => {
+    if (isFullscreen) {
+      await store.exitFullscreen();
+      window.screen?.orientation?.unlock?.();
+    } else {
       await store.requestFullscreen();
-
       if (window.matchMedia('(max-width: 900px)').matches) {
-        try {
-          await window.screen?.orientation?.lock?.('landscape');
-        } catch {
-          // Orientation locking is unavailable or denied on some browsers.
-        }
+        try { await window.screen?.orientation?.lock?.('landscape'); } catch {}
       }
-    },
-  }), [store, state]);
+    }
+  }, [isFullscreen, store]);
 
-  return { store, state, actions };
+  return {
+    store,
+    state: {
+      paused, muted, volume, currentTime, duration,
+      isFullscreen, playbackRate, playbackRateAvailability,
+      qualities, activeQuality // Pass quality state
+    },
+    actions: { 
+      togglePlay, toggleMute, setVolume, seek, setSpeed, 
+      toggleFullscreen, setQuality // Pass action
+    }
+  };
 }
