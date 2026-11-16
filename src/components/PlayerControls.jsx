@@ -16,7 +16,6 @@ function PlayerControls({ usePlayer }) {
   const settingsRef = useRef(null);
   const progressBarRef = useRef(null);
 
-  // 🚀 Close Settings on outside click
   useEffect(() => {
     function handleClickOutside(event) {
       if (settingsRef.current && !settingsRef.current.contains(event.target)) {
@@ -27,12 +26,10 @@ function PlayerControls({ usePlayer }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // 🚀 Picture-in-Picture Logic
   const togglePiP = async () => {
     try {
       const videoElement = document.querySelector('video');
       if (!videoElement) return;
-
       if (document.pictureInPictureElement) {
         await document.exitPictureInPicture();
       } else {
@@ -42,19 +39,6 @@ function PlayerControls({ usePlayer }) {
       console.error("PiP Error:", error);
     }
   };
-
-  // 🚀 Keyboard Shortcut for PiP (Press 'P')
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key.toLowerCase() === 'p' && !e.ctrlKey && !e.metaKey) {
-        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-          togglePiP();
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   const handleSeek = (e) => {
     if (!progressBarRef.current || !state.duration) return;
@@ -76,7 +60,7 @@ function PlayerControls({ usePlayer }) {
       <div className="w-full flex items-center justify-between z-50 h-8 sm:h-10">
         
         {/* Left Side Controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 h-full">
+        <div className="flex items-center gap-1 sm:gap-2.5 h-full">
           
           {/* Play/Pause Button */}
           <button
@@ -105,9 +89,9 @@ function PlayerControls({ usePlayer }) {
             </svg>
           </button>
 
-          {/* Time Display */}
-          <div className="text-[10px] sm:text-xs text-gray-300 font-mono font-medium shrink-0 z-50 flex items-center justify-center min-w-[70px] sm:min-w-[90px]">
-            {formatTime(state.currentTime)} <span className="text-gray-500 mx-1">/</span> {formatTime(state.duration)}
+          {/* 🚀 Time Display (Responsive) 🚀 */}
+          <div className="text-[9px] sm:text-xs text-gray-300 font-mono font-medium shrink-0 z-50 flex items-center justify-center min-w-[60px] sm:min-w-[90px]">
+            {formatTime(state.currentTime)} <span className="text-gray-500 mx-0.5 sm:mx-1">/</span> {formatTime(state.duration)}
           </div>
 
           {/* Forward 10s */}
@@ -124,7 +108,7 @@ function PlayerControls({ usePlayer }) {
         </div>
 
         {/* Right Side Controls */}
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0 z-50 pointer-events-auto h-full">
+        <div className="flex items-center gap-0.5 sm:gap-2 shrink-0 z-50 pointer-events-auto h-full">
           
           <VolumeControl
             volume={state.volume}
@@ -133,46 +117,41 @@ function PlayerControls({ usePlayer }) {
             onToggleMute={actions.toggleMute}
           />
 
-          {/* Settings Button */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               setSettingsOpen(!settingsOpen);
             }}
-            className={`w-7 h-7 sm:w-8 sm:h-8 ${actionBtnClass} ${
+            className={`w-6 h-6 sm:w-8 sm:h-8 ${actionBtnClass} ${
               settingsOpen ? 'text-nexus-red bg-white/10' : ''
             }`}
             aria-label="Settings"
           >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
             </svg>
           </button>
 
-          {/* Picture-in-Picture Button */}
           <button
             onClick={togglePiP}
-            className={`w-7 h-7 sm:w-8 sm:h-8 ${actionBtnClass}`}
+            className={`w-6 h-6 sm:w-8 sm:h-8 ${actionBtnClass}`}
             title="Picture in Picture (Press 'P')"
-            aria-label="Picture in Picture"
           >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="4" width="20" height="16" rx="2" />
               <rect x="12" y="12" width="8" height="6" rx="1" fill="currentColor" stroke="none" />
             </svg>
           </button>
 
-          {/* Fullscreen Button */}
           <button
             onClick={actions.toggleFullscreen}
-            className={`w-7 h-7 sm:w-8 sm:h-8 ${actionBtnClass}`}
-            aria-label={state.isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+            className={`w-6 h-6 sm:w-8 sm:h-8 ${actionBtnClass}`}
           >
             {state.isFullscreen ? (
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+              <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
             ) : (
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+              <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
             )}
           </button>
         </div>
