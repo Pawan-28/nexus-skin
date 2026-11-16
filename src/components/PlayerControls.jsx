@@ -16,6 +16,7 @@ function PlayerControls({ usePlayer }) {
   const settingsRef = useRef(null);
   const progressBarRef = useRef(null);
 
+  // 🚀 Close Settings on outside click
   useEffect(() => {
     function handleClickOutside(event) {
       if (settingsRef.current && !settingsRef.current.contains(event.target)) {
@@ -24,6 +25,35 @@ function PlayerControls({ usePlayer }) {
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // 🚀 Picture-in-Picture Logic
+  const togglePiP = async () => {
+    try {
+      const videoElement = document.querySelector('video');
+      if (!videoElement) return;
+
+      if (document.pictureInPictureElement) {
+        await document.exitPictureInPicture();
+      } else {
+        await videoElement.requestPictureInPicture();
+      }
+    } catch (error) {
+      console.error("PiP Error:", error);
+    }
+  };
+
+  // 🚀 Keyboard Shortcut for PiP (Press 'P')
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key.toLowerCase() === 'p' && !e.ctrlKey && !e.metaKey) {
+        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+          togglePiP();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const handleSeek = (e) => {
@@ -36,16 +66,23 @@ function PlayerControls({ usePlayer }) {
 
   const progressPercent = state.duration ? (state.currentTime / state.duration) * 100 : 0;
 
+  // 🚀 Action Button Class (No border, no outline on click, but focus visible for keyboard)
+  const actionBtnClass = "flex items-center justify-center text-white/80 hover:text-nexus-red transition-all duration-200 ease-out active:scale-125 cursor-pointer shrink-0 z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-nexus-red rounded-full";
+
   return (
     <div ref={settingsRef} className="relative w-full flex flex-col gap-1.5 px-3 sm:px-5 py-2 pointer-events-auto min-h-[56px] justify-center">
       
       {/* Main Row */}
       <div className="w-full flex items-center justify-between z-50 h-8 sm:h-10">
         
+        {/* Left Side Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 h-full">
+          
+          {/* Play/Pause Button */}
           <button
             onClick={actions.togglePlay}
-            className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-nexus-red text-white hover:scale-105 transition-all shadow-md shrink-0 cursor-pointer z-50"
+            className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-nexus-red text-white hover:scale-105 active:scale-95 transition-all shadow-md shrink-0 cursor-pointer z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+            aria-label={state.paused ? 'Play' : 'Pause'}
           >
             <div className="w-4 h-4 flex items-center justify-center">
               {state.paused ? (
@@ -56,18 +93,29 @@ function PlayerControls({ usePlayer }) {
             </div>
           </button>
 
-          <button onClick={() => actions.seek(Math.max(0, state.currentTime - 10))} className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-white/80 hover:text-white transition-colors cursor-pointer shrink-0 z-50">
+          {/* Rewind 10s */}
+          <button 
+            onClick={() => actions.seek(Math.max(0, state.currentTime - 10))} 
+            className={`w-6 h-6 sm:w-7 sm:h-7 ${actionBtnClass}`}
+            aria-label="Rewind 10 seconds"
+          >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" />
               <text x="12" y="15" fontSize="8" textAnchor="middle" fill="currentColor" stroke="none" fontWeight="bold">10</text>
             </svg>
           </button>
 
+          {/* Time Display */}
           <div className="text-[10px] sm:text-xs text-gray-300 font-mono font-medium shrink-0 z-50 flex items-center justify-center min-w-[70px] sm:min-w-[90px]">
             {formatTime(state.currentTime)} <span className="text-gray-500 mx-1">/</span> {formatTime(state.duration)}
           </div>
 
-          <button onClick={() => actions.seek(Math.min(state.duration, state.currentTime + 10))} className="w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-white/80 hover:text-white transition-colors cursor-pointer shrink-0 z-50">
+          {/* Forward 10s */}
+          <button 
+            onClick={() => actions.seek(Math.min(state.duration, state.currentTime + 10))} 
+            className={`w-6 h-6 sm:w-7 sm:h-7 ${actionBtnClass}`}
+            aria-label="Forward 10 seconds"
+          >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" />
               <text x="12" y="15" fontSize="8" textAnchor="middle" fill="currentColor" stroke="none" fontWeight="bold">10</text>
@@ -75,7 +123,9 @@ function PlayerControls({ usePlayer }) {
           </button>
         </div>
 
+        {/* Right Side Controls */}
         <div className="flex items-center gap-1 sm:gap-2 shrink-0 z-50 pointer-events-auto h-full">
+          
           <VolumeControl
             volume={state.volume}
             muted={state.muted}
@@ -83,14 +133,16 @@ function PlayerControls({ usePlayer }) {
             onToggleMute={actions.toggleMute}
           />
 
+          {/* Settings Button */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               setSettingsOpen(!settingsOpen);
             }}
-            className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-all shrink-0 cursor-pointer z-[60] ${
-              settingsOpen ? 'text-nexus-red bg-white/10' : 'text-white/80 hover:text-white'
+            className={`w-7 h-7 sm:w-8 sm:h-8 ${actionBtnClass} ${
+              settingsOpen ? 'text-nexus-red bg-white/10' : ''
             }`}
+            aria-label="Settings"
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="3" />
@@ -98,9 +150,24 @@ function PlayerControls({ usePlayer }) {
             </svg>
           </button>
 
+          {/* Picture-in-Picture Button */}
+          <button
+            onClick={togglePiP}
+            className={`w-7 h-7 sm:w-8 sm:h-8 ${actionBtnClass}`}
+            title="Picture in Picture (Press 'P')"
+            aria-label="Picture in Picture"
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <rect x="12" y="12" width="8" height="6" rx="1" fill="currentColor" stroke="none" />
+            </svg>
+          </button>
+
+          {/* Fullscreen Button */}
           <button
             onClick={actions.toggleFullscreen}
-            className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white/80 hover:text-white transition-colors shrink-0 cursor-pointer z-50"
+            className={`w-7 h-7 sm:w-8 sm:h-8 ${actionBtnClass}`}
+            aria-label={state.isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
           >
             {state.isFullscreen ? (
               <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
@@ -111,6 +178,7 @@ function PlayerControls({ usePlayer }) {
         </div>
       </div>
 
+      {/* Timeline */}
       <div 
         className="relative w-full h-2 flex items-center cursor-pointer group/timeline touch-none mt-1 z-50"
         onPointerDown={handleSeek}

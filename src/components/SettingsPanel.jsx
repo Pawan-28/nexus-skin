@@ -13,7 +13,7 @@ function SettingsPanel({
 }) {
   const [activeMenu, setActiveMenu] = useState('main');
 
-  // 🚀 Professional iOS Style Icons 🚀
+  // 🚀 Professional Red Icons 🚀
   const QualityIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="6" width="20" height="12" rx="2" />
@@ -45,11 +45,11 @@ function SettingsPanel({
     <div
       className="
         absolute right-0
-        bottom-full mb-2
-        w-[200px] sm:w-[240px]
+        bottom-full mb-1
+        w-[210px] sm:w-[250px]
         
-        /* 🚀 Solid Glass Background 🚀 */
-        bg-[#1A1A1A]/95
+        /* 🚀 Premium Glass Background 🚀 */
+        bg-[#1A1A1A]/90
         backdrop-blur-2xl
         border border-white/10
         rounded-xl
@@ -66,14 +66,15 @@ function SettingsPanel({
         <div className="flex flex-col py-1">
           <button
             onClick={() => setActiveMenu('quality')}
-            className="group flex items-center justify-between px-4 py-3.5 text-white hover:bg-white/10 transition-all duration-200"
+            className="group flex items-center justify-between px-4 py-3.5 text-white hover:bg-white/5 transition-all duration-200"
           >
             <div className="flex items-center gap-3">
-              <span className="text-white/70 group-hover:text-white transition-colors"><QualityIcon /></span>
-              <span className="text-sm font-medium">Quality</span>
+              {/* Red Icon */}
+              <span className="text-nexus-red transition-transform group-hover:scale-110"><QualityIcon /></span>
+              <span className="text-xs font-semibold tracking-wide">Quality</span>
             </div>
-            <div className="flex items-center gap-1.5 text-white/40">
-              <span className="text-[11px] font-medium">{activeQuality ? `${activeQuality}p` : 'Auto'}</span>
+            <div className="flex items-center gap-1.5 text-white/50">
+              <span className="text-[10px] font-medium">{activeQuality ? `${activeQuality}p` : 'Auto'}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
             </div>
           </button>
@@ -82,14 +83,15 @@ function SettingsPanel({
 
           <button
             onClick={() => setActiveMenu('speed')}
-            className="group flex items-center justify-between px-4 py-3.5 text-white hover:bg-white/10 transition-all duration-200"
+            className="group flex items-center justify-between px-4 py-3.5 text-white hover:bg-white/5 transition-all duration-200"
           >
             <div className="flex items-center gap-3">
-              <span className="text-white/70 group-hover:text-white transition-colors"><SpeedIcon /></span>
-              <span className="text-sm font-medium">Speed</span>
+              {/* Red Icon */}
+              <span className="text-nexus-red transition-transform group-hover:scale-110"><SpeedIcon /></span>
+              <span className="text-xs font-semibold tracking-wide">Speed</span>
             </div>
-            <div className="flex items-center gap-1.5 text-white/40">
-              <span className="text-[11px] font-medium">{currentSpeed === 1 ? 'Normal' : `${currentSpeed}x`}</span>
+            <div className="flex items-center gap-1.5 text-white/50">
+              <span className="text-[10px] font-medium">{currentSpeed === 1 ? 'Normal' : `${currentSpeed}x`}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
             </div>
           </button>
@@ -99,20 +101,20 @@ function SettingsPanel({
       {/* SPEED SUBMENU */}
       {activeMenu === 'speed' && (
         <div className="flex flex-col">
-          <div className="flex items-center gap-2 px-2 py-2.5 border-b border-white/10">
+          <div className="flex items-center gap-2 px-2 py-2.5 border-b border-white/10 bg-black/20">
             <button onClick={() => setActiveMenu('main')} className="p-1.5 rounded-md text-white/70 hover:bg-white/10 hover:text-white transition-colors">
               <BackIcon />
             </button>
             <span className="text-white text-xs font-semibold">Playback Speed</span>
           </div>
-          {/* 🚀 Scrollable List with 2 items visible 🚀 */}
+          {/* 🚀 Scroll List (2 items visible) 🚀 */}
           <div className="flex flex-col py-1 max-h-[70px] overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
             {playbackSpeeds.map((speed) => (
               <button
                 key={speed}
                 disabled={disabled}
                 onClick={() => { onSpeedChange(speed); setActiveMenu('main'); }}
-                className={`flex items-center justify-between px-4 py-2 transition-all duration-200 hover:bg-white/10 ${currentSpeed === speed ? 'bg-white/10' : ''} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`flex items-center justify-between px-4 py-2.5 transition-all duration-200 hover:bg-white/10 ${currentSpeed === speed ? 'bg-white/5' : ''} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <span className={`text-xs ${currentSpeed === speed ? 'text-nexus-red font-bold' : 'text-white'}`}>
                   {speed === 1 ? 'Normal' : `${speed}x`}
@@ -127,20 +129,20 @@ function SettingsPanel({
       {/* QUALITY SUBMENU */}
       {activeMenu === 'quality' && (
         <div className="flex flex-col">
-          <div className="flex items-center gap-2 px-2 py-2.5 border-b border-white/10">
+          <div className="flex items-center gap-2 px-2 py-2.5 border-b border-white/10 bg-black/20">
             <button onClick={() => setActiveMenu('main')} className="p-1.5 rounded-md text-white/70 hover:bg-white/10 hover:text-white transition-colors">
               <BackIcon />
             </button>
             <span className="text-white text-xs font-semibold">Video Quality</span>
           </div>
-          {/* 🚀 Scrollable List with 2 items visible 🚀 */}
+          {/* 🚀 Scroll List (2 items visible) 🚀 */}
           <div className="flex flex-col py-1 max-h-[70px] overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
             {qualities.length > 0 ? (
               qualities.map((q) => (
                 <button
                   key={q.height}
                   onClick={() => { onQualityChange(q.height); setActiveMenu('main'); }}
-                  className={`flex items-center justify-between px-4 py-2 transition-all duration-200 hover:bg-white/10 ${activeQuality === q.height ? 'bg-white/10' : ''}`}
+                  className={`flex items-center justify-between px-4 py-2.5 transition-all duration-200 hover:bg-white/10 ${activeQuality === q.height ? 'bg-white/5' : ''}`}
                 >
                   <span className={`text-xs ${activeQuality === q.height ? 'text-nexus-red font-bold' : 'text-white'}`}>
                     {q.height}p

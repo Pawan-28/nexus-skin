@@ -4,8 +4,14 @@ function VolumeControl({ volume = 1, muted = false, onVolumeChange, onToggleMute
   const currentVolume = muted ? 0 : volume;
   const [isHovered, setIsHovered] = useState(false);
 
-  // Toggle slider on tap/click
-  const handleToggleSlider = (e) => {
+  // 🚀 Icon Click: Toggle Mute 🚀
+  const handleIconClick = (e) => {
+    e.stopPropagation();
+    onToggleMute();
+  };
+
+  // 🚀 Mobile par slider open karne ke liye (Optional: tap and hold)
+  const handleSliderToggle = (e) => {
     e.stopPropagation();
     setIsHovered(!isHovered);
   };
@@ -38,8 +44,10 @@ function VolumeControl({ volume = 1, muted = false, onVolumeChange, onToggleMute
         />
       </div>
 
+      {/* 🚀 Volume Icon Button: Click to Mute 🚀 */}
       <button 
-        onClick={handleToggleSlider}
+        onClick={handleIconClick}
+        onContextMenu={(e) => { e.preventDefault(); handleSliderToggle(e); }} // Right click for slider (Desktop)
         className="text-white/80 hover:text-nexus-red transition-colors p-1 cursor-pointer z-50"
         aria-label={muted ? 'Unmute' : 'Mute'}
       >

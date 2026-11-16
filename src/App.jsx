@@ -63,7 +63,7 @@ function App() {
           </div>
           
           <div className="flex flex-wrap gap-2">
-            {['VIDEOJS V10', 'MUX STREAMING', '4K READY'].map((tag) => (
+            {['VIDEOJS V10', 'MUX STREAMING'].map((tag) => (
               <span key={tag} className="px-3 py-1.5 md:px-4 md:py-2 border border-nexus-red/30 rounded-full bg-nexus-red/5 text-nexus-lightRed text-[8px] md:text-[9px] font-bold tracking-wider md:tracking-widest hover:border-nexus-red hover:bg-nexus-red/10 transition-colors cursor-default">
                 {tag}
               </span>

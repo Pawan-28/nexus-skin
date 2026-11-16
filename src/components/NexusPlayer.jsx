@@ -18,10 +18,12 @@ const VIDEOS = [
 
 const { Player, usePlayer } = createPlayer({ features: videoFeatures });
 
-function NexusSkin({ children, title, onVideoChange, currentVideoIndex, autoPlay }) {
+function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVideoIndex, autoPlay }) {
   const store = usePlayer();
   const currentTime = usePlayer((s) => s.currentTime);
   const isPaused = usePlayer((s) => s.paused);
+  const isMuted = usePlayer((s) => s.muted);
+  const volume = usePlayer((s) => s.volume);
   
   const [chapters, setChapters] = useState([]);
   const [controlsVisible, setControlsVisible] = useState(true);
@@ -40,28 +42,25 @@ function NexusSkin({ children, title, onVideoChange, currentVideoIndex, autoPlay
     }
   }, [currentVideoIndex]);
 
-  // 🚀 Auto-Play Logic: Jab naya video load ho, toh play karo 🚀
+  // 🚀 Auto-Play Logic 🚀
   useEffect(() => {
     if (autoPlay) {
-      // Chota sa delay taaki player properly load ho jaye
       setTimeout(() => {
         store.play().catch(() => {
-          console.log("Autoplay blocked by browser. User needs to interact first.");
+          console.log("Autoplay blocked by browser.");
         });
       }, 100);
     }
   }, [autoPlay, store]);
 
-  // 🚀 Auto-Hide Logic (Har mode mein) 🚀
+  // 🚀 Auto-Hide Logic 🚀
   const resetTimeout = () => {
     setControlsVisible(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    
-    if (isPaused) return; // Agar paused hai toh hide nahi karna
-
+    if (isPaused) return;
     timeoutRef.current = setTimeout(() => {
       setControlsVisible(false);
-    }, 3000); // 3 second baad hide
+    }, 3000);
   };
 
   useEffect(() => {
@@ -74,6 +73,65 @@ function NexusSkin({ children, title, onVideoChange, currentVideoIndex, autoPlay
   const handleInteraction = () => {
     resetTimeout();
   };
+
+  // 🚀 Keyboard Shortcuts Listener 🚀
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ignore if user is typing in an input
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      switch (e.key.toLowerCase()) {
+        case ' ':
+          e.preventDefault();
+          isPaused ? store.play() : store.pause();
+          break;
+        case 'm':
+          e.preventDefault();
+          store.setMuted(!isMuted);
+          break;
+        case 'arrowup':
+          e.preventDefault();
+          store.setVolume(Math.min(1, volume + 0.1));
+          break;
+        case 'arrowdown':
+          e.preventDefault();
+          store.setVolume(Math.max(0, volume - 0.1));
+          break;
+        case 'arrowleft':
+          e.preventDefault();
+          store.seek(Math.max(0, currentTime - 10));
+          break;
+        case 'arrowright':
+          e.preventDefault();
+          store.seek(Math.min(store.duration, currentTime + 10));
+          break;
+        case 'f':
+          e.preventDefault();
+          if (store.isFullscreen) {
+            store.exitFullscreen();
+          } else {
+            store.requestFullscreen();
+          }
+          break;
+        case 'p':
+          e.preventDefault();
+          const videoElement = document.querySelector('video');
+          if (videoElement) {
+            if (document.pictureInPictureElement) {
+              document.exitPictureInPicture();
+            } else {
+              videoElement.requestPictureInPicture();
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPaused, isMuted, volume, currentTime, store]);
 
   return (
     <div 
@@ -93,13 +151,24 @@ function NexusSkin({ children, title, onVideoChange, currentVideoIndex, autoPlay
         <div 
           className={`absolute top-0 left-0 right-0 z-30 p-2 sm:p-4 pointer-events-none flex justify-between items-start transition-opacity duration-300 ${controlsVisible ? 'opacity-100' : 'opacity-0'}`}
         >
+          
+          {/* Previous Button (Top Left) */}
+          <button 
+            onClick={(e) => { e.stopPropagation(); onPreviousVideo(); }}
+            className="pointer-events-auto flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-nexus-red/20 border border-nexus-red/40 rounded-full text-white text-[9px] sm:text-[10px] font-bold backdrop-blur-md hover:bg-nexus-red/40 hover:border-nexus-red/60 transition-all shadow-md z-50 mt-1 sm:mt-0"
+          >
+            <span>PREVIOUS</span>
+          </button>
+
+          {/* Title (Center) */}
           <div className="w-full absolute top-0 left-0 flex justify-center p-0 m-0 sm:pt-0 pointer-events-none">
              <PlayerHeader title={title} />
           </div>
           
+          {/* Next Button (Top Right) */}
           <button 
             onClick={(e) => { e.stopPropagation(); onVideoChange(); }}
-            className="absolute top-2 right-2 sm:top-4 sm:right-4 pointer-events-auto flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-nexus-red/20 border border-nexus-red/40 rounded-full text-white text-[9px] sm:text-[10px] font-bold backdrop-blur-md hover:bg-nexus-red/40 hover:border-nexus-red/60 transition-all shadow-md z-50"
+            className="pointer-events-auto flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-nexus-red/20 border border-nexus-red/40 rounded-full text-white text-[9px] sm:text-[10px] font-bold backdrop-blur-md hover:bg-nexus-red/40 hover:border-nexus-red/60 transition-all shadow-md z-50 mt-1 sm:mt-0"
           >
             <span>NEXT VIDEO</span>
           </button>
@@ -125,8 +194,12 @@ function NexusSkin({ children, title, onVideoChange, currentVideoIndex, autoPlay
           </Controls.Content>
         </Controls.Root>
 
+        {/* 🚀 Video.js Hotkeys (Backup) 🚀 */}
         <Hotkey keys="Space" action="togglePaused" />
         <Hotkey keys="f" action="toggleFullscreen" />
+        <Hotkey keys="m" action="toggleMuted" />
+        <Hotkey keys="ArrowLeft" action="seekStep" value={-10} />
+        <Hotkey keys="ArrowRight" action="seekStep" value={10} />
         <StatusAnnouncer />
       </Container>
     </div>
@@ -135,12 +208,17 @@ function NexusSkin({ children, title, onVideoChange, currentVideoIndex, autoPlay
 
 function NexusPlayer() {
   const [videoIndex, setVideoIndex] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(false); // 🚀 State for Auto-Play 🚀
+  const [autoPlay, setAutoPlay] = useState(false);
   const currentVideo = VIDEOS[videoIndex];
 
   const handleNextVideo = () => {
     setVideoIndex((prev) => (prev + 1) % VIDEOS.length);
-    setAutoPlay(true); // 🚀 Next video par autoplay trigger karo 🚀
+    setAutoPlay(true);
+  };
+
+  const handlePreviousVideo = () => {
+    setVideoIndex((prev) => (prev - 1 + VIDEOS.length) % VIDEOS.length);
+    setAutoPlay(true);
   };
 
   return (
@@ -149,6 +227,7 @@ function NexusPlayer() {
         <NexusSkin 
           title={currentVideo.title} 
           onVideoChange={handleNextVideo}
+          onPreviousVideo={handlePreviousVideo}
           currentVideoIndex={videoIndex}
           autoPlay={autoPlay}
         >
