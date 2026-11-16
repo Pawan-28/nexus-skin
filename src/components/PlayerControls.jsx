@@ -50,8 +50,8 @@ function PlayerControls({ usePlayer }) {
 
   const progressPercent = state.duration ? (state.currentTime / state.duration) * 100 : 0;
 
-  // 🚀 Action Button Class (No border, no outline on click, but focus visible for keyboard)
-  const actionBtnClass = "flex items-center justify-center text-white/80 hover:text-nexus-red transition-all duration-200 ease-out active:scale-125 cursor-pointer shrink-0 z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-nexus-red rounded-full";
+  // 🚀 Touch Feedback Fix: Added active:text-nexus-red
+  const actionBtnClass = "flex items-center justify-center text-white/80 hover:text-nexus-red active:text-nexus-red transition-all duration-200 ease-out active:scale-125 cursor-pointer shrink-0 z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-nexus-red rounded-full";
 
   return (
     <div ref={settingsRef} className="relative w-full flex flex-col gap-1.5 px-3 sm:px-5 py-2 pointer-events-auto min-h-[56px] justify-center">
@@ -89,7 +89,7 @@ function PlayerControls({ usePlayer }) {
             </svg>
           </button>
 
-          {/* 🚀 Time Display (Responsive) 🚀 */}
+          {/* Time Display */}
           <div className="text-[9px] sm:text-xs text-gray-300 font-mono font-medium shrink-0 z-50 flex items-center justify-center min-w-[60px] sm:min-w-[90px]">
             {formatTime(state.currentTime)} <span className="text-gray-500 mx-0.5 sm:mx-1">/</span> {formatTime(state.duration)}
           </div>
