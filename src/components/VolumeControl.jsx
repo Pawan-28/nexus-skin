@@ -4,16 +4,28 @@ function VolumeControl({ volume = 1, muted = false, onVolumeChange, onToggleMute
   const currentVolume = muted ? 0 : volume;
   const [isHovered, setIsHovered] = useState(false);
 
-  // 🚀 Icon Click: Toggle Mute 🚀
+  // 🚀 Icon Click: Toggle Mute (Mobile & Desktop)
   const handleIconClick = (e) => {
     e.stopPropagation();
     onToggleMute();
   };
 
-  // 🚀 Mobile par slider open karne ke liye (Optional: tap and hold)
-  const handleSliderToggle = (e) => {
+  // 🚀 Long Press: Open Slider (Mobile)
+  let pressTimer;
+  const handleTouchStart = (e) => {
     e.stopPropagation();
-    setIsHovered(!isHovered);
+    pressTimer = setTimeout(() => {
+      setIsHovered(true);
+    }, 500); // 500ms long press
+  };
+
+  const handleTouchEnd = (e) => {
+    e.stopPropagation();
+    clearTimeout(pressTimer);
+    // Agar slider khula hai toh band kar do
+    if (isHovered) {
+      setTimeout(() => setIsHovered(false), 2000); // 2 second baad band
+    }
   };
 
   return (
@@ -44,11 +56,12 @@ function VolumeControl({ volume = 1, muted = false, onVolumeChange, onToggleMute
         />
       </div>
 
-      {/* 🚀 Volume Icon Button: Click to Mute 🚀 */}
+      {/* 🚀 Volume Icon Button: Click to Mute, Touch Feedback 🚀 */}
       <button 
         onClick={handleIconClick}
-        onContextMenu={(e) => { e.preventDefault(); handleSliderToggle(e); }} // Right click for slider (Desktop)
-        className="text-white/80 hover:text-nexus-red transition-colors p-1 cursor-pointer z-50"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        className="flex items-center justify-center text-white/80 hover:text-nexus-red active:text-nexus-red transition-all duration-200 ease-out active:scale-125 p-1 cursor-pointer z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-nexus-red rounded-full"
         aria-label={muted ? 'Unmute' : 'Mute'}
       >
         {currentVolume === 0 ? (

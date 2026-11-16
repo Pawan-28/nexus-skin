@@ -23,6 +23,7 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
   const currentTime = usePlayer((s) => s.currentTime);
   const isPaused = usePlayer((s) => s.paused);
   const isMuted = usePlayer((s) => s.muted);
+  const isFullscreen = usePlayer((s) => s.isFullscreen);
   const volume = usePlayer((s) => s.volume);
   
   const [chapters, setChapters] = useState([]);
@@ -74,14 +75,17 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
     resetTimeout();
   };
 
-  // 🚀 Keyboard Shortcuts Listener 🚀
+  // 🚀 FULL KEYBOARD SHORTCUTS (Fullscreen + Normal) 🚀
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Ignore if user is typing in an input
+      // Ignore if user is typing in an input or textarea
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-      switch (e.key.toLowerCase()) {
+      const key = e.key.toLowerCase();
+
+      switch (key) {
         case ' ':
+        case 'k':
           e.preventDefault();
           isPaused ? store.play() : store.pause();
           break;
@@ -97,21 +101,34 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
           e.preventDefault();
           store.setVolume(Math.max(0, volume - 0.1));
           break;
-        case 'arrowleft':
-          e.preventDefault();
-          store.seek(Math.max(0, currentTime - 10));
-          break;
         case 'arrowright':
+        case 'l':
           e.preventDefault();
-          store.seek(Math.min(store.duration, currentTime + 10));
+          // Guidelines: ArrowRight = 5s, L = 10s
+          const forwardTime = key === 'l' ? 10 : 5;
+          store.seek(Math.min(store.duration, currentTime + forwardTime));
+          break;
+        case 'arrowleft':
+        case 'j':
+          e.preventDefault();
+          // Guidelines: ArrowLeft = 5s, J = 10s
+          const backwardTime = key === 'j' ? 10 : 5;
+          store.seek(Math.max(0, currentTime - backwardTime));
           break;
         case 'f':
           e.preventDefault();
-          if (store.isFullscreen) {
+          if (isFullscreen) {
             store.exitFullscreen();
           } else {
             store.requestFullscreen();
           }
+          break;
+        case 'escape':
+          // Browser handles Esc for fullscreen automatically
+          break;
+        case '0':
+          e.preventDefault();
+          store.seek(0);
           break;
         case 'p':
           e.preventDefault();
@@ -131,7 +148,7 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isPaused, isMuted, volume, currentTime, store]);
+  }, [isPaused, isMuted, volume, currentTime, store, isFullscreen]);
 
   return (
     <div 
@@ -155,7 +172,8 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
           {/* Previous Button (Top Left) */}
           <button 
             onClick={(e) => { e.stopPropagation(); onPreviousVideo(); }}
-            className="pointer-events-auto flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-nexus-red/20 border border-nexus-red/40 rounded-full text-white text-[9px] sm:text-[10px] font-bold backdrop-blur-md hover:bg-nexus-red/40 hover:border-nexus-red/60 transition-all shadow-md z-50 mt-1 sm:mt-0"
+            className="pointer-events-auto flex items-center justify-center px-3 py-1.5 sm:px-4 sm:py-2 bg-black/40 sm:bg-nexus-red/20 border border-white/10 sm:border-nexus-red/40 rounded-full text-white/90 sm:text-white text-[9px] sm:text-[11px] font-bold backdrop-blur-md hover:bg-nexus-red/40 hover:border-nexus-red/60 transition-all shadow-md z-50 mt-1 sm:mt-0"
+            aria-label="Previous Video"
           >
             <span>PREVIOUS</span>
           </button>
@@ -168,7 +186,8 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
           {/* Next Button (Top Right) */}
           <button 
             onClick={(e) => { e.stopPropagation(); onVideoChange(); }}
-            className="pointer-events-auto flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 bg-nexus-red/20 border border-nexus-red/40 rounded-full text-white text-[9px] sm:text-[10px] font-bold backdrop-blur-md hover:bg-nexus-red/40 hover:border-nexus-red/60 transition-all shadow-md z-50 mt-1 sm:mt-0"
+            className="pointer-events-auto flex items-center justify-center px-3 py-1.5 sm:px-4 sm:py-2 bg-black/40 sm:bg-nexus-red/20 border border-white/10 sm:border-nexus-red/40 rounded-full text-white/90 sm:text-white text-[9px] sm:text-[11px] font-bold backdrop-blur-md hover:bg-nexus-red/40 hover:border-nexus-red/60 transition-all shadow-md z-50 mt-1 sm:mt-0"
+            aria-label="Next Video"
           >
             <span>NEXT VIDEO</span>
           </button>
@@ -198,8 +217,8 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
         <Hotkey keys="Space" action="togglePaused" />
         <Hotkey keys="f" action="toggleFullscreen" />
         <Hotkey keys="m" action="toggleMuted" />
-        <Hotkey keys="ArrowLeft" action="seekStep" value={-10} />
-        <Hotkey keys="ArrowRight" action="seekStep" value={10} />
+        <Hotkey keys="ArrowLeft" action="seekStep" value={-5} />
+        <Hotkey keys="ArrowRight" action="seekStep" value={5} />
         <StatusAnnouncer />
       </Container>
     </div>
