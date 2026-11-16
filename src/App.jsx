@@ -99,7 +99,9 @@ function App() {
         
         <span className="flex items-center gap-1.5 group cursor-default">
           DEVELOPED WITH <span className="text-nexus-red group-hover:scale-125 transition-transform duration-300">❤</span> BY 
-          <span className="text-white font-bold tracking-wider group-hover:text-nexus-lightRed transition-colors">PAWAN</span>
+          <span className="bg-gradient-to-r from-red-500 via-yellow-400 to-red-800 bg-clip-text text-transparent font-bold tracking-wider transition-all duration-300 group-hover:from-yellow-400 group-hover:via-red-500 group-hover:to-red-900">
+            PAWAN
+        </span>
         </span>
       </footer>
 
