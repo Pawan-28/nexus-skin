@@ -175,7 +175,7 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
             className="pointer-events-auto flex items-center justify-center px-3 py-1.5 sm:px-4 sm:py-2 bg-black/40 sm:bg-nexus-red/20 border border-white/10 sm:border-nexus-red/40 rounded-full text-white/90 sm:text-white text-[9px] sm:text-[11px] font-bold backdrop-blur-md hover:bg-nexus-red/40 hover:border-nexus-red/60 transition-all shadow-md z-50 mt-1 sm:mt-0"
             aria-label="Previous Video"
           >
-            <span>PREVIOUS</span>
+            <span>PREV VIDEO</span>
           </button>
 
           {/* Title (Center) */}

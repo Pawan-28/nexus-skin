@@ -95,23 +95,34 @@ For the Video.js Skins Design Challenge Mux bonus, submit the playback ID for th
 ## Project structure
 
 ```text
-src/
-  components/
-    ChapterPanel.jsx
-    NexusPlayer.jsx
-    PlayerControls.jsx
-    PlayerHeader.jsx
-    SettingsPanel.jsx
-    ThumbnailStrip.jsx
-    VolumeControl.jsx
-  hooks/
-    usePlayerControls.js
-  App.jsx
-  index.css
-public/
-  chapters.vtt
-  favicon.svg
-  icons.svg
+nexus-skin/
+├── public/
+│   ├── chapters.vtt
+│   ├── favicon.svg
+│   └── icons.svg
+│
+├── src/
+│   ├── components/
+│   │   ├── ChapterPanel.jsx
+│   │   ├── NexusPlayer.jsx
+│   │   ├── PlayerControls.jsx
+│   │   ├── PlayerHeader.jsx
+│   │   ├── SettingsPanel.jsx
+│   │   ├── ThumbnailStrip.jsx
+│   │   └── VolumeControl.jsx
+│   │
+│   ├── hooks/
+│   │   └── usePlayerControls.js
+│   │
+│   │
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+│
+├── index.html
+├── package.json
+├── README.md
+└── LICENSE-APACHE-2.0
 ```
 
 ## Before submitting

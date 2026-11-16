@@ -8,89 +8,83 @@ function App() {
       <div className="absolute top-[10%] -left-[10%] w-[500px] h-[500px] bg-nexus-red rounded-full blur-[150px] opacity-10 pointer-events-none z-[-1] animate-pulse-slow" />
       <div className="absolute top-[40%] -right-[10%] w-[500px] h-[500px] bg-nexus-darkRed rounded-full blur-[150px] opacity-10 pointer-events-none z-[-1] animate-pulse-slow delay-1000" />
 
-      <div className="max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 py-6 md:py-8 relative z-10">
+      {/* 🚀 Padding Kam Ki Hai 🚀 */}
+      <div className="max-w-[1800px] mx-auto px-2 md:px-6 lg:px-10 pt-2 md:pt-3 pb-4 relative z-10">
         
-        {/* 🚀 Header (Fade Down) 🚀 */}
-        <header className="flex justify-between items-center mb-10 md:mb-16 animate-fade-down">
-          <a href="#" className="flex items-center gap-3 no-underline group">
-            <span className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl bg-gradient-to-br from-nexus-red to-nexus-darkRed text-white text-xl md:text-2xl font-black shadow-[0_0_25px_rgba(255,55,58,0.3)] transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110">
+        {/* 🚀 Header (Margin Kam Kiya) 🚀 */}
+        <header className="flex justify-between items-center mb-0 md:mb-1 animate-fade-down px-2 md:px-4">
+          <a href="#" className="flex items-center gap-2 md:gap-3 no-underline group">
+            <span className="relative w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-nexus-red to-nexus-darkRed text-white text-lg md:text-xl font-black shadow-[0_0_25px_rgba(255,55,58,0.3)] transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110">
               N
             </span>
             <div>
-              <strong className="block text-lg md:text-2xl tracking-[3px] md:tracking-[4px] font-bold">
+              <strong className="block text-base md:text-xl tracking-[2px] md:tracking-[3px] font-bold">
                 NEXUS<span className="text-nexus-red">.</span>
               </strong>
-              <small className="block text-[8px] md:text-[9px] tracking-[2px] md:tracking-[3px] text-gray-400 mt-0.5 md:mt-1 font-semibold">
+              <small className="block text-[7px] md:text-[8px] tracking-[1px] md:tracking-[2px] text-gray-400 mt-0.5 font-semibold">
                 PROOF PLAYER
               </small>
             </div>
           </a>
 
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-nexus-red shadow-[0_0_12px_rgba(255,55,58,0.9)] animate-pulse" />
-            <span className="text-[9px] md:text-[10px] tracking-[1px] md:tracking-[2px] text-gray-300 font-semibold">
+          <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-nexus-red shadow-[0_0_12px_rgba(255,55,58,0.9)] animate-pulse" />
+            <span className="text-[8px] md:text-[9px] tracking-[1px] text-gray-300 font-semibold">
               PLAYER ONLINE
             </span>
           </div>
         </header>
 
-        {/* 🚀 Hero Section 🚀 */}
-        <section className="mb-10 md:mb-14 text-center flex flex-col items-center">
-          <span className="animate-fade-up opacity-0 [animation-delay:200ms] text-nexus-lightRed text-[9px] md:text-[11px] tracking-[4px] md:tracking-[6px] font-bold uppercase">
-            YOUR WORK. YOUR STORY.
-          </span>
-          
-          <h1 className="animate-fade-up opacity-0 [animation-delay:400ms] text-xl sm:text-3xl md:text-5xl lg:text-[64px] font-extrabold mt-4 mb-4 tracking-tight text-white whitespace-nowrap">
-            Every frame tells <span className="bg-gradient-to-r from-nexus-red via-red-500 to-nexus-darkRed bg-clip-text text-transparent animate-gradient-x bg-[length:200%_auto]">a story.</span>
-          </h1>
-          
-          <p className="animate-fade-up opacity-0 [animation-delay:600ms] text-gray-400 text-xs md:text-base lg:text-lg max-w-[650px] leading-relaxed mx-auto">
-            A premium video experience for creative professionals. Built for cinematic storytelling.
-          </p>
-        </section>
-
-        {/* 🚀 Player 🚀 */}
-        <div className="w-full flex justify-center animate-scale-in opacity-0 [animation-delay:800ms]">
+        {/* 🚀 Player (Neeche se Gap Hataya) 🚀 */}
+        <div className="w-full flex justify-center animate-scale-in opacity-0 [animation-delay:200ms] -mt-2 md:-mt-4">
           <NexusPlayer />
         </div>
 
-        {/* 🚀 Video Details 🚀 */}
-        <div className="animate-fade-up opacity-0 [animation-delay:1000ms] flex flex-col md:flex-row md:items-center justify-between gap-6 mt-10 md:mt-12 border-t border-white/10 pt-6 relative text-center md:text-left">
+        {/* 🚀 Video Details (Tags Left & Right) 🚀 */}
+        <div className="animate-fade-up opacity-0 [animation-delay:400ms] flex flex-col md:flex-row md:items-center justify-between gap-4 mt-2 md:mt-4 border-t border-white/10 pt-4 relative px-2 md:px-4">
+          
+          {/* Red Glow Line */}
           <div className="absolute top-0 left-0 w-1/3 h-px bg-gradient-to-r from-nexus-red to-transparent"></div>
           
-          <div className="flex flex-col items-center md:items-start w-full md:w-auto">
-            <span className="text-nexus-lightRed text-[9px] md:text-[10px] tracking-[2px] md:tracking-[3px] font-bold uppercase block mb-1 md:mb-2">
-              FEATURED PROJECT
-            </span>
-            <h2 className="text-xl md:text-3xl font-bold mb-1 md:mb-2">NEXUS PROOF PLAYER - Cinematic</h2>
-            <p className="text-gray-400 text-xs md:text-sm max-w-lg">
-              A cinematic journey through our world. Experience every frame in stunning quality.
-            </p>
-          </div>
-          
-          <div className="flex flex-wrap justify-center md:justify-start gap-2 w-full md:w-auto">
+          <div className="flex justify-between w-full items-center">
             {['VIDEOJS V10', 'MUX STREAMING'].map((tag) => (
-              <span key={tag} className="px-3 py-1.5 md:px-4 md:py-2 border border-nexus-red/30 rounded-full bg-nexus-red/5 text-nexus-lightRed text-[8px] md:text-[9px] font-bold tracking-wider md:tracking-widest hover:border-nexus-red hover:bg-nexus-red/20 transition-all duration-300 cursor-default">
+              <span key={tag} className="px-3 py-1.5 md:px-4 md:py-2 border border-nexus-red/30 rounded-full bg-nexus-red/5 text-nexus-lightRed text-[8px] md:text-[9px] font-bold tracking-wider hover:border-nexus-red hover:bg-nexus-red/20 transition-all duration-300 cursor-default">
                 {tag}
               </span>
             ))}
           </div>
+
         </div>
 
+        {/* 🚀 Hero Section 🚀 */}
+        <section className="mt-8 md:mt-12 text-center flex flex-col items-center animate-fade-up opacity-0 [animation-delay:600ms] px-4">
+          <span className="text-nexus-lightRed text-[8px] md:text-[10px] tracking-[3px] md:tracking-[5px] font-bold uppercase">
+            YOUR WORK. YOUR STORY.
+          </span>
+          
+          <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mt-3 mb-3 tracking-tight text-white whitespace-nowrap">
+            Every frame tells <span className="bg-gradient-to-r from-nexus-red via-red-500 to-nexus-darkRed bg-clip-text text-transparent animate-gradient-x bg-[length:200%_auto]">a story.</span>
+          </h1>
+          
+          <p className="text-gray-400 text-xs md:text-sm max-w-[600px] leading-relaxed mx-auto">
+            A premium video experience for creative professionals. Built for cinematic storytelling.
+          </p>
+        </section>
+
         {/* 🚀 Features Grid 🚀 */}
-        <div className="animate-fade-up opacity-0 [animation-delay:1200ms] grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 mt-12 md:mt-20">
+        <div className="animate-fade-up opacity-0 [animation-delay:800ms] grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8 md:mt-12 px-2 md:px-4">
           {[
             { num: '01', title: 'Cinematic Experience', desc: 'A premium video interface designed for immersive storytelling and creative presentations.' },
             { num: '02', title: 'Smart Controls', desc: 'Custom playback controls, timeline navigation, chapters and playback speed settings.' },
             { num: '03', title: 'Built for Everyone', desc: 'Responsive design, keyboard navigation and accessible controls across devices.' }
           ].map((feat, i) => (
-            <article key={i} className="group relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-[#191919] to-[#0d0d0d] border border-white/5 hover:border-nexus-red/50 hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <article key={i} className="group relative p-4 md:p-6 rounded-xl bg-gradient-to-br from-[#191919] to-[#0d0d0d] border border-white/5 hover:border-nexus-red/50 hover:-translate-y-1 transition-all duration-500 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-nexus-red/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               
               <div className="relative z-10">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-red to-red-400 text-3xl font-extrabold">{feat.num}</span>
-                <h3 className="text-white text-base md:text-lg font-bold mt-4 mb-2 group-hover:text-nexus-lightRed transition-colors">{feat.title}</h3>
-                <p className="text-gray-400 text-xs md:text-sm leading-relaxed">{feat.desc}</p>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-nexus-red to-red-400 text-2xl font-extrabold">{feat.num}</span>
+                <h3 className="text-white text-sm md:text-base font-bold mt-3 mb-1.5 group-hover:text-nexus-lightRed transition-colors">{feat.title}</h3>
+                <p className="text-gray-400 text-[10px] md:text-xs leading-relaxed">{feat.desc}</p>
               </div>
             </article>
           ))}
@@ -98,24 +92,15 @@ function App() {
 
       </div>
 
-      {/* 🚀 Footer (Developed by Pawan) 🚀 */}
-      <footer className="max-w-[1600px] mx-auto px-4 md:px-10 lg:px-16 mt-12 md:mt-20 py-6 md:py-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left text-[8px] md:text-[9px] font-semibold tracking-[1px] md:tracking-[2px] text-gray-500 animate-fade-up opacity-0 [animation-delay:1400ms]">
+      {/* 🚀 Footer 🚀 */}
+      <footer className="max-w-[1800px] mx-auto px-4 md:px-6 lg:px-10 mt-8 md:mt-12 py-4 md:py-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-2 text-center md:text-left text-[8px] md:text-[9px] font-semibold tracking-[1px] md:tracking-[2px] text-gray-500 animate-fade-up opacity-0 [animation-delay:1000ms]">
         <span>© 2026 NEXUS PROOF PLAYER</span>
         <span>POWERED BY VIDEO.JS V10 + MUX</span>
         
-        {/* 🚀 Yahan Name Add Kiya Hai 🚀 */}
         <span className="flex items-center gap-1.5 group cursor-default">
           DEVELOPED WITH <span className="text-nexus-red group-hover:scale-125 transition-transform duration-300">❤</span> BY 
-         
-
-<span className="bg-gradient-to-r from-red-500 via-yellow-400 to-orange-500 bg-clip-text text-transparent font-extrabold tracking-wider transition-all duration-300 group-hover:from-yellow-400 group-hover:via-pink-500 group-hover:to-red-500">
-  PAWAN
-</span>
-
-
-</span>
-
-        
+          <span className="text-white font-bold tracking-wider group-hover:text-nexus-lightRed transition-colors">PAWAN</span>
+        </span>
       </footer>
 
       {/* 🚀 Custom CSS for Animations 🚀 */}
