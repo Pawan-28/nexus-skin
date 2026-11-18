@@ -40,6 +40,7 @@ function PlayerControls({ usePlayer }) {
     }
   };
 
+  // 🚀 Smooth Seek (Sirf click aur touch par)
   const handleSeek = (e) => {
     if (!progressBarRef.current || !state.duration) return;
     const rect = progressBarRef.current.getBoundingClientRect();
@@ -50,7 +51,6 @@ function PlayerControls({ usePlayer }) {
 
   const progressPercent = state.duration ? (state.currentTime / state.duration) * 100 : 0;
 
-  // 🚀 Touch Feedback Fix: Added active:text-nexus-red
   const actionBtnClass = "flex items-center justify-center text-white/80 hover:text-nexus-red active:text-nexus-red transition-all duration-200 ease-out active:scale-125 cursor-pointer shrink-0 z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-nexus-red rounded-full";
 
   return (
@@ -61,8 +61,6 @@ function PlayerControls({ usePlayer }) {
         
         {/* Left Side Controls */}
         <div className="flex items-center gap-1 sm:gap-2.5 h-full">
-          
-          {/* Play/Pause Button */}
           <button
             onClick={actions.togglePlay}
             className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-nexus-red text-white hover:scale-105 active:scale-95 transition-all shadow-md shrink-0 cursor-pointer z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
@@ -77,7 +75,6 @@ function PlayerControls({ usePlayer }) {
             </div>
           </button>
 
-          {/* Rewind 10s */}
           <button 
             onClick={() => actions.seek(Math.max(0, state.currentTime - 10))} 
             className={`w-6 h-6 sm:w-7 sm:h-7 ${actionBtnClass}`}
@@ -89,12 +86,10 @@ function PlayerControls({ usePlayer }) {
             </svg>
           </button>
 
-          {/* Time Display */}
           <div className="text-[9px] sm:text-xs text-gray-300 font-mono font-medium shrink-0 z-50 flex items-center justify-center min-w-[60px] sm:min-w-[90px]">
             {formatTime(state.currentTime)} <span className="text-gray-500 mx-0.5 sm:mx-1">/</span> {formatTime(state.duration)}
           </div>
 
-          {/* Forward 10s */}
           <button 
             onClick={() => actions.seek(Math.min(state.duration, state.currentTime + 10))} 
             className={`w-6 h-6 sm:w-7 sm:h-7 ${actionBtnClass}`}
@@ -157,11 +152,11 @@ function PlayerControls({ usePlayer }) {
         </div>
       </div>
 
-      {/* Timeline */}
+      {/* 🚀 TIMELINE (Smooth & Fast) 🚀 */}
       <div 
         className="relative w-full h-2 flex items-center cursor-pointer group/timeline touch-none mt-1 z-50"
-        onPointerDown={handleSeek}
-        onPointerMove={(e) => { if (e.buttons === 1) handleSeek(e); }}
+        onClick={handleSeek} // Click se direct seek
+        onPointerDown={handleSeek} // Touch ke liye
       >
         <div ref={progressBarRef} className="relative w-full h-[3px] bg-white/20 rounded-full overflow-hidden group-hover/timeline:h-1 transition-all duration-200">
           <div className="absolute top-0 left-0 h-full bg-nexus-red rounded-full" style={{ width: `${progressPercent}%` }} />
