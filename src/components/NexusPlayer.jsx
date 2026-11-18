@@ -43,16 +43,24 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
     }
   }, [currentVideoIndex]);
 
-  // 🚀 Auto-Play Logic 🚀
+  // 🚀 Auto-Play Logic (Forceful) 🚀
   useEffect(() => {
     if (autoPlay) {
-      setTimeout(() => {
-        store.play().catch(() => {
-          console.log("Autoplay blocked by browser.");
-        });
-      }, 100);
+      const timer = setTimeout(() => {
+        // Direct video element ko play karo
+        const videoEl = document.querySelector('video');
+        if (videoEl) {
+          videoEl.play().catch(() => {
+            // Agar block ho, toh muted karke play karo
+            store.setMuted(true);
+            videoEl.play().catch(() => {});
+          });
+        }
+      }, 500); // 500ms delay for source load
+
+      return () => clearTimeout(timer);
     }
-  }, [autoPlay, store]);
+  }, [autoPlay, currentVideoIndex, store]);
 
   // 🚀 Auto-Hide Logic 🚀
   const resetTimeout = () => {
@@ -75,10 +83,9 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
     resetTimeout();
   };
 
-  // 🚀 FULL KEYBOARD SHORTCUTS (Fullscreen + Normal) 🚀
+  // 🚀 FULL KEYBOARD SHORTCUTS 🚀
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Ignore if user is typing in an input or textarea
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
       const key = e.key.toLowerCase();
@@ -104,14 +111,12 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
         case 'arrowright':
         case 'l':
           e.preventDefault();
-          // Guidelines: ArrowRight = 5s, L = 10s
           const forwardTime = key === 'l' ? 10 : 5;
           store.seek(Math.min(store.duration, currentTime + forwardTime));
           break;
         case 'arrowleft':
         case 'j':
           e.preventDefault();
-          // Guidelines: ArrowLeft = 5s, J = 10s
           const backwardTime = key === 'j' ? 10 : 5;
           store.seek(Math.max(0, currentTime - backwardTime));
           break;
@@ -122,9 +127,6 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
           } else {
             store.requestFullscreen();
           }
-          break;
-        case 'escape':
-          // Browser handles Esc for fullscreen automatically
           break;
         case '0':
           e.preventDefault();
@@ -158,7 +160,7 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
       onClick={handleInteraction}
     >
       
-      <Container className="relative w-full h-[240px] sm:h-auto sm:aspect-video sm:max-h-[650px] overflow-hidden" aria-label={title}>
+      <Container className="relative w-full h-[240px] sm:h-auto sm:aspect-video sm:max-h-[75vh] lg:max-h-[80vh] overflow-hidden" aria-label={title}>
         
         <div className="absolute inset-0 w-full h-full z-0 bg-black">
           {children}
@@ -213,7 +215,7 @@ function NexusSkin({ children, title, onVideoChange, onPreviousVideo, currentVid
           </Controls.Content>
         </Controls.Root>
 
-        {/* 🚀 Video.js Hotkeys (Backup) 🚀 */}
+        {/* 🚀 Video.js Hotkeys 🚀 */}
         <Hotkey keys="Space" action="togglePaused" />
         <Hotkey keys="f" action="toggleFullscreen" />
         <Hotkey keys="m" action="toggleMuted" />
@@ -256,7 +258,7 @@ function NexusPlayer() {
               playbackId: currentVideo.id,
               poster: { time: 2, width: 1280 },
               storyboard: { format: 'webp' },
-              playback: { maxResolution: '1080p' }, 
+              // ✅ Yahan se maxResolution hata diya hai taaki Mux saari qualities bheje
             }}
             playsInline
             crossOrigin="anonymous"
